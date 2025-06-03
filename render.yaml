@@ -1,0 +1,34 @@
+services:
+  - type: web
+    name: job-bot-web
+    env: python
+    rootDir: web
+    plan: free
+    buildCommand: ""
+    startCommand: ""
+    envVars:
+      - key: SMTP_SERVER
+        sync: false
+      - key: SMTP_PORT
+        sync: false
+      - key: EMAIL_USER
+        sync: false
+      - key: EMAIL_PASSWORD
+        sync: false
+
+  - type: worker
+    name: job-bot-worker
+    env: python
+    rootDir: worker
+    plan: free
+    buildCommand: ""
+    startCommand: ""
+    envVars:
+      - key: SMTP_SERVER
+        sync: false
+      - key: SMTP_PORT
+        sync: false
+      - key: EMAIL_USER
+        sync: false
+      - key: EMAIL_PASSWORD
+        sync: false
