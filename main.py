@@ -24,8 +24,8 @@ class JobScraper:
             'vocal_recording': ['vocal recording', 'vocalist recording', 'singer recording', 'voice recording']
         }
         self.negative_phrases = [
-            "i will", "i can", "i offer", "my service", "my gig", "hire me", "check out my gig",
-            "offering my services", "available for work"
+            "i will", "i can", "i offer", "my service", "my gig", "hire me", 
+            "check out my gig", "offering my services", "available for work"
         ]
 
     def is_job_offer(self, text: str) -> bool:
