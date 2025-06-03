@@ -1,0 +1,15 @@
+body {
+    background-color: #f8f9fa;
+}
+
+h1 {
+    color: #333333;
+}
+
+.table {
+    background-color: #ffffff;
+}
+
+.btn {
+    min-width: 120px;
+}
