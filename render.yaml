@@ -5,7 +5,7 @@ services:
     rootDir: web
     plan: free
     buildCommand: ""
-    startCommand: ""
+    startCommand: "gunicorn web:app --timeout 300"
     envVars:
       - key: SMTP_SERVER
         sync: false
@@ -22,7 +22,7 @@ services:
     rootDir: worker
     plan: free
     buildCommand: ""
-    startCommand: ""
+    startCommand: "python worker.py"
     envVars:
       - key: SMTP_SERVER
         sync: false
