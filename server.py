@@ -12,28 +12,28 @@ logger = logging.getLogger(__name__)
 
 app = Flask(__name__)
 
-# גלובל קטן לשמור תוצאות לרענון הדשבורד
+# משתנה גלובלי פשוט לשמירת תוצאות לריצה האחרונה
 last_results = []
+last_run_time = None
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return render_template('index.html', last_run=last_run_time, job_count=len(last_results))
 
 @app.route('/dashboard')
 def dashboard():
-    return render_template('dashboard.html', jobs=last_results)
+    return render_template('dashboard.html', jobs=last_results, last_run=last_run_time)
 
 @app.route('/run-now')
 def run_now():
     logger.info("Manual scraping triggered...")
     scraper = JobScraper()
     jobs = scraper.scrape_all_categories()
-    global last_results
+    global last_results, last_run_time
     last_results = jobs
-    send_email = os.getenv("ENABLE_EMAIL", "true").lower() != "false"
-    if send_email:
-        from main import send_email
-        send_email(jobs)
+    last_run_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    from main import send_email
+    send_email(jobs)
     return render_template('result.html', count=len(jobs))
 
 def run_job_scraper_background():
@@ -41,8 +41,9 @@ def run_job_scraper_background():
         logger.info("Scheduled job scraping started...")
         scraper = JobScraper()
         jobs = scraper.scrape_all_categories()
-        global last_results
+        global last_results, last_run_time
         last_results = jobs
+        last_run_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         from main import send_email
         send_email(jobs)
     except Exception as e:
@@ -59,11 +60,10 @@ def run_scheduler():
         schedule.run_pending()
         time.sleep(1)
 
-# Schedule jobs at 08:00 and 18:00
+# תיזמון פעמיים ביום
 schedule.every().day.at("08:00").do(scheduled_job_scraper)
 schedule.every().day.at("18:00").do(scheduled_job_scraper)
 
-# Start scheduler thread
 scheduler_thread = threading.Thread(target=run_scheduler)
 scheduler_thread.daemon = True
 scheduler_thread.start()
