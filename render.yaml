@@ -4,13 +4,9 @@ services:
     env: python
     rootDir: web
     plan: free
-    buildCommand: ""
+    buildCommand: "pip install -r requirements.txt"
     startCommand: "gunicorn web:app --timeout 300"
     envVars:
-      - key: SMTP_SERVER
-        sync: false
-      - key: SMTP_PORT
-        sync: false
       - key: EMAIL_USER
         sync: false
       - key: EMAIL_PASSWORD
@@ -21,16 +17,10 @@ services:
     env: python
     rootDir: worker
     plan: free
-    buildCommand: ""
+    buildCommand: "pip install -r requirements.txt"
     startCommand: "python worker.py"
     envVars:
-      - key: SMTP_SERVER
-        sync: false
-      - key: SMTP_PORT
-        sync: false
       - key: EMAIL_USER
         sync: false
       - key: EMAIL_PASSWORD
         sync: false
-
-        # fake line to reload the render
