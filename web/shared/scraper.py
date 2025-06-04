@@ -1,3 +1,4 @@
+import os
 import logging
 import requests
 import trafilatura
@@ -83,4 +84,5 @@ class JobScraper:
                     if len(jobs) >= 3:
                         break
         return jobs
+
 
