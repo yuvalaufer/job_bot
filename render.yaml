@@ -32,3 +32,4 @@ services:
         sync: false
       - key: EMAIL_PASSWORD
         sync: false
+
