@@ -1,5 +1,10 @@
 from flask import Flask, render_template, request, redirect, url_for
 import os
+import sys
+
+# מאפשר לפייתון למצוא את המודול shared
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
 from shared.scraper import scrape_jobs
 from shared.emailer import send_email
 
@@ -11,18 +16,12 @@ def index():
 
 @app.route("/run", methods=["POST"])
 def run_bot():
-    # Get user email and search keywords from the form
     user_email = request.form.get("email")
     keywords = request.form.get("keywords")
     search_terms = [kw.strip() for kw in keywords.split(",") if kw.strip()]
-
-    # Run the scraper
     results = scrape_jobs(search_terms)
-
-    # Send email
     if user_email:
         send_email(user_email, results)
-
     return render_template("result.html", results=results, email=user_email)
 
 @app.route("/dashboard")

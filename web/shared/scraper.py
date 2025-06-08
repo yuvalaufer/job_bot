@@ -87,3 +87,11 @@ class JobScraper:
                     if len(jobs) >= 3:
                         break
         return jobs
+
+# פונקציה לייבוא ישיר – משמשת את web.py
+def scrape_jobs(search_terms=None):
+    scraper = JobScraper()
+    if search_terms:
+        # חיפוש מותאם אישית (מהדשבורד)
+        scraper.search_terms = {'custom': search_terms}
+    return scraper.scrape_all()
