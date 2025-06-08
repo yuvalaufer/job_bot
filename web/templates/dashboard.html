@@ -5,6 +5,9 @@
 </head>
 <body>
     <h1>Job Scraper Dashboard</h1>
+    {% if last_run %}
+        <p>Last run: {{ last_run }}</p>
+    {% endif %}
     {% if jobs %}
         <table border="1">
             <tr>
@@ -31,4 +34,3 @@
     <a href="/">Back to Home</a>
 </body>
 </html>
-

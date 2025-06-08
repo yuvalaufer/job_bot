@@ -86,3 +86,4 @@ class JobScraper:
         return jobs
 
 
+

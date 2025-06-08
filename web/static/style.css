@@ -9,5 +9,11 @@ h1 {
 }
 .btn {
     min-width: 120px;
+    margin: 4px;
 }
-
+td {
+    padding: 4px 10px;
+}
+tr:nth-child(even) {
+    background-color: #eeeeee;
+}

@@ -2,6 +2,7 @@ import os
 import logging
 from flask import Flask, render_template
 from shared.scraper import JobScraper
+from datetime import datetime
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -27,11 +28,9 @@ def run_now():
     last_results = jobs
     from shared.emailer import send_email
     send_email(jobs)
-    from datetime import datetime
     last_run_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     return render_template('result.html', count=len(jobs))
 
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port, debug=True)
-
