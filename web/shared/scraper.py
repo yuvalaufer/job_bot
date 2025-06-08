@@ -12,13 +12,17 @@ class JobScraper:
     def __init__(self):
         self.jobs = []
         self.search_terms = {
-            'translation': ['english hebrew translation', 'english to hebrew translator', 'hebrew translation'],
-            'song_translation': ['english hebrew song translation', 'song translation hebrew', 'music translation hebrew'],
-            'piano_recording': ['piano recording', 'pianist recording', 'piano session musician'],
-            'vocal_recording': ['vocal recording', 'vocalist recording', 'singer recording', 'voice recording']
+            'translation': ['english hebrew translation', 'english to hebrew translator', 'hebrew translation',
+                            'תרגום מעברית לאנגלית', 'מתרגם מעברית לאנגלית'],
+            'song_translation': ['english hebrew song translation', 'song translation hebrew', 'music translation hebrew',
+                                 'תרגום שירים', 'תרגום שירים מאנגלית'],
+            'piano_recording': ['piano recording', 'pianist recording', 'piano session musician',
+                                'הקלטת פסנתר', 'פסנתרן להקלטה'],
+            'vocal_recording': ['vocal recording', 'vocalist recording', 'singer recording', 'voice recording',
+                                'הקלטת שירה', 'זמרת להקלטה', 'שירה מקצועית']
         }
         self.negative_phrases = [
-            "i will", "i can", "i offer", "my service", "my gig", "hire me", 
+            "i will", "i can", "i offer", "my service", "my gig", "hire me",
             "check out my gig", "offering my services", "available for work"
         ]
 
@@ -35,7 +39,7 @@ class JobScraper:
             if response.status_code == 200:
                 text_content = trafilatura.extract(response.text)
                 if text_content:
-                    job_patterns = self._extract_job_info(text_content, search_term, platform)
+                    job_patterns = self._extract_job_info(text_content, search_term, platform, url)
                     jobs.extend(job_patterns)
             time.sleep(1)
         except Exception as e:
@@ -50,7 +54,6 @@ class JobScraper:
                 all_jobs.extend(self.scrape_platform(f"https://www.upwork.com/nx/search/jobs/?q={term.replace(' ', '%20')}", term, "Upwork"))
                 all_jobs.extend(self.scrape_platform(f"https://www.freelancer.com/jobs/{term.replace(' ', '-')}/", term, "Freelancer"))
                 all_jobs.extend(self.scrape_platform(f"https://www.fiverr.com/search/gigs?query={term.replace(' ', '%20')}", term, "Fiverr"))
-
         seen = set()
         unique_jobs = []
         for job in all_jobs:
@@ -61,7 +64,7 @@ class JobScraper:
         logger.info(f"Found {len(unique_jobs)} unique jobs")
         return unique_jobs
 
-    def _extract_job_info(self, text_content, search_term, platform):
+    def _extract_job_info(self, text_content, search_term, platform, url):
         jobs = []
         lines = text_content.split('\n')
         for line in lines:
@@ -77,13 +80,10 @@ class JobScraper:
                         'platform': platform,
                         'search_term': search_term,
                         'budget': prices[0] if prices else 'Not specified',
-                        'url': f"Search for '{search_term}' on {platform}",
+                        'url': url,
                         'scraped_at': datetime.now().strftime('%Y-%m-%d %H:%M:%S')
                     }
                     jobs.append(job)
                     if len(jobs) >= 3:
                         break
         return jobs
-
-
-
